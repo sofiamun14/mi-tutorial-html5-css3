@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/estilo2.css">
+    <link rel="shortcut icon" href="imagenes/iconocor.ico" />
+    <script src="./tutor-script.js" type="module"></script>
+    <script src="funciones.js" defer></script>
+    <title>Tutor LPP</title>
+</head>
+<body>
+    <header> <img src="imagenes/logo2.png" height="85%" alt="no se ve"></header>
+    <nav>
+      <ul>
+           <li><a href="index.html"> Inicio </a></li>
+           <li><a href="chat.html"> Chat </a></li>
+           <li><a href="Tutor.html"> Tutor LPP </a></li>
+           <li><a href="Flotantes.html"> Flotantes </a></li>
+           <li><a href="Consulta.html"> Consulta </a></li>
+           <li><a href="Transiciones.html"> Transiciones </a></li>
+           <li><a href="Columnas.html"> Columnas </a></li>
+           <li><a href="audio.html"> Audio </a></li>
+           <li><a href="degradados.html"> Degradados </a></li>
+           <li><a href="Animaciones.html"> Animaciones </a></li>
+           <li><a href="SVG.html"> SVG </a></li>
+           <li><a href="editable.html"> Contenido editable </a></li>
+      </ul>
+ </nav>
+
+    
+    <section class="contenedor">
+    
+        <h2>Tutor de LPP</h2>
+        <p> Escribe tu codigo LPP aquí</p>
+        <div id="chat"></div>
+    
+        <input type="text" id="userInput" placeholder="Escribe tu código o consulta sobre LPP...">
+        <button id="sendButton">Enviar</button>
+    </section>
+    <script>
+        async function sendMessage() {
+            const userInputElement = document.getElementById("userInput"); // Referencia al input
+            const userInput = userInputElement.value; // Obtener el valor
+            const chatDiv = document.getElementById("chat");
+        
+            if (!userInput.trim()) return;
+        
+            // Mostrar el mensaje del usuario
+            chatDiv.innerHTML += `<p><strong>Tú:</strong> ${userInput}</p>`;
+            
+            userInputElement.value = ""; // Limpiar el campo de entrada después de enviar
+        
+            try {
+                const response = await fetch("http://localhost:3000/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: userInput }),
+                });
+        
+                const data = await response.json();
+                
+                // Mostrar respuesta de Gemini
+                chatDiv.innerHTML += `<p><strong>Gemini:</strong> ${data.reply}</p>`;
+            } catch (error) {
+                console.error("Error in sendMessage:", error);
+                chatDiv.innerHTML += `<p style="color: red;">Error al obtener respuesta.</p>`;
+            }
+        }
+        
+        document.getElementById("sendButton").addEventListener("click", sendMessage);
+        
+    </script>
+
+</body>
+</html>
